@@ -1,0 +1,51 @@
+#ifndef MyTokens
+#define MyTokens
+  
+  enum yytokentype
+{
+    COMMENT=258,
+    WHITESPACE=259,
+    ID=260,
+    ADD_OP=261,
+    MULT_OP=262,
+    LOG_OP=263,
+    REL_OP=264,
+    ASSIGN=265,
+    PERIOD=266,
+    DDPERIOD=267,
+    INCR=268,
+    TRUE_LITERAL=269,
+    FALSE_LITERAL=270,
+    INT_LITERAL=271,
+    REAL_LITERAL=272,
+    STRING_LITERAL=273,
+    DATE_LITERAL=274,
+    SEMICOLON=275,
+    PAR_OP=276,
+    PAR_CL=277,
+    BRACK_OP=278,
+    BRACK_CL=279,
+    COMA=280,
+    WHILE=281,
+    IF=282,
+    ELSE=283,
+    RETURN=284,
+    INICIO=285,
+    IF_THEN=286,
+    DO=287,
+    END=288,
+    STATIC_TKN=289,
+
+    INT_TYPE=290,
+    ANYTYPE_TYPE=291,
+    BOOLEAN_TYPE=292,
+    VOID_TYPE=293,
+    REAL_TYPE=294,
+    STRING_TYPE=295,
+    DATE_TYPE=296,
+
+    DIGIT=297,
+    LETTER=298
+
+};
+#endif

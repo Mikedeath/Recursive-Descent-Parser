@@ -1,0 +1,15 @@
+
+static void main() {
+    while(true) {
+        if(false) {
+            int d := 2;
+            int e := 3;
+            int f := 4;
+            int g := 5;
+            while(true) {
+                String h := "Hello world";
+            }
+           
+        }
+    }
+}
