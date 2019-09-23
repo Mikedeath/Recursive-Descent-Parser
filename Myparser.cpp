@@ -24,6 +24,7 @@ bool expr_stmt(void);
 bool assign_stmt(void);
 bool bool_expr(void);
 bool constant(void);
+void print(string);
 
 ifstream in("entrada.txt");
 ifstream in2("entrada.txt");
@@ -39,29 +40,41 @@ int main()
 
     if (Program() == true)
     {
-        cout << "sirve";
+        cout << "GRAMATICA CORRECTA"<<endl;
     }
     else
     {
-        cout << "no sirve";
+        cout << "GRAMATICA INCORRECTA";
     }
     return 0;
+}
+void print(string fname){
+    cout<<fname+": "<<endl;
+    cout<<"TOKEN=";
+    cout<<lexer->YYText()<<endl;
+    cout<<endl;
 }
 
 bool Program()
 {
+     cout<<"Program"<<endl;
+       cout<<endl;
     if (opt_funct_decl())
     {
+      
         return true;
     }
     return false;
 }
 bool opt_funct_decl()
 {
+    cout<<"opt_funct_decl"<<endl;
+      cout<<endl;
     if (funct_head())
     {
         if (body())
         {
+           
             return true;
         }
     }
@@ -69,7 +82,8 @@ bool opt_funct_decl()
 }
 bool funct_head()
 {
-
+ cout<<"funct_head"<<endl;
+   cout<<endl;
     if (funct_name())
     {
         //si es PAR_OP
@@ -78,13 +92,16 @@ bool funct_head()
         {
             token = lexer->yylex();
             lookA = lexer_for_LookA->yylex();
+            print("PAR_OP");
             if (param_list_opt())
             {
                 //si es PAR_CL
                 if (lookA == PAR_CL)
                 {
+                   
                     lookA = lexer_for_LookA->yylex();
                     token = lexer->yylex();
+                     print("PAR_CL");
                     return true;
                 }
                 return false;
@@ -97,7 +114,8 @@ bool funct_head()
 }
 bool funct_name()
 {
-
+  cout<<"funct_name"<<endl;
+    cout<<endl;
     if (funct_type())
     {
         //is ID
@@ -105,6 +123,7 @@ bool funct_name()
         {
             token = lexer->yylex();
             lookA = lexer_for_LookA->yylex();
+            print("ID");
             return true;
         }
         else
@@ -117,15 +136,15 @@ bool funct_name()
 }
 bool funct_type()
 {
+      cout<<"funct_type"<<endl;
+        cout<<endl;
     //STATIC TOKEN
 
     if (lookA == STATIC_TKN)
     {
         token = lexer->yylex();
-        cout << lexer->YYText() << endl;
         lookA = lexer_for_LookA->yylex();
-        cout << lexer_for_LookA->YYText() << endl;
-        ;
+        print("STATIC_TKN");
         if (decl_type())
         {
             return true;
@@ -139,6 +158,8 @@ bool funct_type()
 }
 bool decl_type()
 {
+  cout<<"decl_type: "<<endl;
+ 
 
     if (lookA == VOID_TYPE ||
         lookA == INT_TYPE ||
@@ -150,12 +171,16 @@ bool decl_type()
     {
         token = lexer->yylex();
         lookA = lexer_for_LookA->yylex();
+         cout<<"TOKEN= ";
+        cout<<lexer->YYText()<<endl;
+        cout<<endl;
         return true;
     }
     return false;
 }
 bool param_list_opt()
 {
+      cout<<"param_list_opt: ";
     if (lookA == VOID_TYPE || lookA == INT_TYPE ||
         lookA == ANYTYPE_TYPE ||
         lookA == BOOLEAN_TYPE ||
@@ -165,22 +190,27 @@ bool param_list_opt()
     {
         token = lexer->yylex();
         lookA = lexer_for_LookA->yylex();
+        cout<<lexer->YYText()<<endl;
+        cout<<endl;
         if (lookA == PAR_CL)
         {
+            print("PAR_CL");
             return true;
         }
         else if (lookA == COMA)
         {
             token = lexer->yylex();
             lookA = lexer_for_LookA->yylex();
+            print("COMA");
             if (param_list_opt())
-            {
+            {                               
                 return true;
             }
         }
     } //Si es epsilon
     else if (lookA == PAR_CL)
     {
+       
         return true;
     }
     else
@@ -192,6 +222,8 @@ bool param_list_opt()
 }
 bool decl_param()
 {
+    cout<<"decl_param"<<endl;
+      cout<<endl;
     if (decl_type())
     {
 
@@ -199,6 +231,7 @@ bool decl_param()
         {
             token = lexer->yylex();
             lookA = lexer_for_LookA->yylex();
+            print("ID");
             return true;
         }
         
@@ -207,17 +240,25 @@ bool decl_param()
 }
 bool body()
 {
+      cout<<"body"<<endl;
+        cout<<endl;
     if (lookA == BRACK_OP)
     {
         token = lexer->yylex();
         lookA = lexer_for_LookA->yylex();
+        print("BRACK_OP");
         if (stmt_list())
         {
+
             if (lookA == BRACK_CL)
             {
                 token = lexer->yylex();
                 lookA = lexer_for_LookA->yylex();
+                print("BRACK_CL");
                 return true;
+            }
+            else {
+                return stmt_list();
             }
             
         }
@@ -227,13 +268,18 @@ bool body()
 }
 bool stmt_list()
 {
+      cout<<"stmt_list"<<endl;
+        cout<<endl;
 
    return stmts();
 }
 bool stmts()
 {
+      cout<<"stmts"<<endl;
+      cout<<endl;
     if (lookA == BRACK_CL)
     {
+       
         return true;
     }
     else 
@@ -244,6 +290,8 @@ bool stmts()
 }
 bool stmt()
 {
+      cout<<"stmt"<<endl;
+      cout<<endl;
     if (lookA == WHILE)
     {
       return while_stmt();       
@@ -259,9 +307,10 @@ bool stmt()
     }
     else if (expr_stmt())
     {
-         //Check to see If we havent reached the end of the body (in other words, if the next token isnt an '}'), then continue calling statement because there's literally more statements to parse
+         //Si hay mas de un stmt
         if (lookA != BRACK_CL)
             return stmt();
+
         return true;
     }
     else{
@@ -271,20 +320,25 @@ bool stmt()
 }
 bool if_stmt()
 {
+      cout<<"if_stmt"<<endl;
+        cout<<endl;
     if (lookA == IF)
     {
         token = lexer->yylex();
         lookA = lexer_for_LookA->yylex();
+        print("IF");
         if (lookA == PAR_OP)
         {
             token = lexer->yylex();
             lookA = lexer_for_LookA->yylex();
+            print("PAR_OP");
             if (bool_expr())
             {
                 if (lookA == PAR_CL)
                 {
                     token = lexer->yylex();
                     lookA = lexer_for_LookA->yylex();
+                    print("PAR_CL");
                     if (body())
                     {
                         return true;
@@ -297,20 +351,25 @@ bool if_stmt()
 }
 bool while_stmt()
 {
+      cout<<"while_stmt"<<endl;
+        cout<<endl;
     if (lookA == WHILE)
     {
         token = lexer->yylex();
         lookA = lexer_for_LookA->yylex();
+        print("WHILE");
         if (lookA == PAR_OP)
         {
             token = lexer->yylex();
             lookA = lexer_for_LookA->yylex();
+            print("PAR_OP");
             if (bool_expr())
             {
                 if (lookA == PAR_CL)
                 {
                     token = lexer->yylex();
                     lookA = lexer_for_LookA->yylex();
+                    print("PAR_CL");
                     if (body())
                     {
                         return true;
@@ -323,14 +382,18 @@ bool while_stmt()
 }
 bool return_stmt()
 {
+      cout<<"return_stmt"<<endl;
+        cout<<endl;
     if (lookA == RETURN)
     {
         token = lexer->yylex();
         lookA = lexer_for_LookA->yylex();
+        print("PAR_RETURN");
         if (lookA == SEMICOLON)
         {
             token = lexer->yylex();
             lookA = lexer_for_LookA->yylex();
+            print("PAR_SEMICOLON");
             return true;
         }
        
@@ -345,6 +408,7 @@ bool return_stmt()
                 {
                     token = lexer->yylex();
                     lookA = lexer_for_LookA->yylex();
+                    print("PAR_CL");
                     return true;
                 }
             }
@@ -358,28 +422,35 @@ bool return_stmt()
 }
 bool expr_stmt()
 {
+      cout<<"expr_stmt"<<endl;
+        cout<<endl;
     if (assign_stmt())
     {
         if (lookA == SEMICOLON)
         {
             token = lexer->yylex();
             lookA = lexer_for_LookA->yylex();
+            print("SEMICOLON");
             return true;
         }
     }
 }
 bool assign_stmt()
 {
+      cout<<"assign_stmt"<<endl;
+        cout<<endl;
     if (decl_type())
     {
         if (lookA == ID)
         {
             token = lexer->yylex();
             lookA = lexer_for_LookA->yylex();
+            print("ID");
             if (lookA == ASSIGN)
             {
                 token = lexer->yylex();
                 lookA = lexer_for_LookA->yylex();
+                print("ASSIGN");
                 if (constant())
                 {
                     return true;
@@ -392,21 +463,27 @@ bool assign_stmt()
 
 bool bool_expr()
 {
-    
+      cout<<"bool_expr:"<<endl;
+      cout<<"TOKEN=";
     if (lookA == TRUE_LITERAL || lookA == FALSE_LITERAL)
     {
         token = lexer->yylex();
         lookA = lexer_for_LookA->yylex();
+        cout<<lexer->YYText()<<endl;
+        cout<<endl;
         return true;
     }
     else if (lookA == INT_LITERAL || lookA == REAL_LITERAL || lookA == DATE_LITERAL || lookA == STRING_LITERAL)
     {
         token = lexer->yylex();
         lookA = lexer_for_LookA->yylex();
+         cout<<lexer->YYText()<<endl;
+        cout<<endl;
         if (lookA == LOG_OP)
         {
             token = lexer->yylex();
             lookA = lexer_for_LookA->yylex();
+            print("LOG_OP");
             if (constant())
             {
                 return true;
@@ -416,6 +493,7 @@ bool bool_expr()
         {
         token = lexer->yylex();
         lookA = lexer_for_LookA->yylex();
+         print("REL_OP");
             if (constant())
             {
                 return true;
@@ -435,6 +513,8 @@ bool bool_expr()
 
 bool constant()
 {
+      cout<<"Constant: "<<endl;
+      cout<<"TOKEN=";
     if (lookA == INT_LITERAL ||
         lookA == REAL_LITERAL ||
         lookA == DATE_LITERAL ||
@@ -442,6 +522,8 @@ bool constant()
     {
         token = lexer->yylex();
         lookA = lexer_for_LookA->yylex();
+           cout<<lexer->YYText()<<endl;
+        cout<<endl;
         return true;
     }
     return false;
