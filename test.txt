@@ -1,0 +1,15 @@
+
+static void main() {
+    while(true) {
+        {
+        int a := 10;
+        }
+        
+    }
+
+     while(true) {
+
+        
+    }
+     
+}

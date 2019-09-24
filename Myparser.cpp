@@ -26,8 +26,8 @@ bool bool_expr(void);
 bool constant(void);
 void print(string);
 
-ifstream in("entrada.txt");
-ifstream in2("entrada.txt");
+ifstream in("test.txt");
+ifstream in2("test.txt");
 yyFlexLexer *lexer = new yyFlexLexer(&in);
 yyFlexLexer *lexer_for_LookA = new yyFlexLexer(&in2);
 int lookA;
@@ -138,8 +138,6 @@ bool funct_type()
 {
       cout<<"funct_type"<<endl;
         cout<<endl;
-    //STATIC TOKEN
-
     if (lookA == STATIC_TKN)
     {
         token = lexer->yylex();
@@ -258,7 +256,16 @@ bool body()
                 return true;
             }
             else {
-                return stmt_list();
+                
+            if(stmt_list()){
+            if (lookA == BRACK_CL)
+            {
+                token = lexer->yylex();
+                lookA = lexer_for_LookA->yylex();
+                print("BRACK_CL");
+                return true;
+            }
+                }
             }
             
         }
